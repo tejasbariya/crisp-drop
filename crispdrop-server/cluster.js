@@ -50,7 +50,7 @@ if (cluster.isPrimary) {
 
   // @socket.io/sticky: attach sticky-session dispatcher to the primary's HTTP server.
   // All incoming HTTP connections are balanced and pinned to the correct worker.
-  setupMaster(httpServer);
+  setupMaster(httpServer, { proxy : true});
 
   // @socket.io/cluster-adapter: initialize the primary process as the message broker.
   // This is required for workers to exchange Socket.io messages and fetchSockets().
