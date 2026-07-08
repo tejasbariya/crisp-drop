@@ -50,7 +50,13 @@ if (cluster.isPrimary) {
 
   // @socket.io/sticky: attach sticky-session dispatcher to the primary's HTTP server.
   // All incoming HTTP connections are balanced and pinned to the correct worker.
-  setupMaster(httpServer, { proxy : true});
+  setupMaster(httpServer, {
+  computeClientAddress: (req, res) => {
+    // Extract real client IP from the proxy header
+    const forwarded = req.headers['x-forwarded-for'];
+    return forwarded ? forwarded.split(',')[0] : req.connection.remoteAddress;
+  }
+});
 
   // @socket.io/cluster-adapter: initialize the primary process as the message broker.
   // This is required for workers to exchange Socket.io messages and fetchSockets().
